@@ -9,6 +9,7 @@ redis = "*"
 [dev-packages]
 pytest = "*"
 fakeredis = "*"
+pytest-asyncio = "*"
 
 [requires]
 python_version = "3.7"
