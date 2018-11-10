@@ -8,13 +8,14 @@ from uuid import uuid4
 
 class Throttle:
 
-    def __init__(self, redis: StrictRedis, max_parallels: int):
+    def __init__(self, redis: StrictRedis, name: str, max_parallels: int):
         self.redis = redis
+        self.name = name
         self.max_parallels = max_parallels
 
     @property
     def __key(self):
-        return 'recter'
+        return 'recter:' + self.name
 
     async def run_async(self, coroutine):
         # return await coroutine
