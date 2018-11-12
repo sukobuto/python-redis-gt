@@ -11,8 +11,8 @@
 - [x] 待機 timeout を設ける
 - [x] 処理 timeout を設ける
 - [x] ゴミが残らないように TTL を設ける
-- [ ] asyncio を使わない Throttle を実装する
-- [ ] Throttle と AsyncThrottle のデコレータを実装するo
+- [x] asyncio を使わない Throttle を実装する
+- [x] Throttle と AsyncThrottle のデコレータを実装するo
 
 throttle をテストするアイデア
 - 待たされた回数を記録する
