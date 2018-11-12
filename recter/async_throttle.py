@@ -1,9 +1,12 @@
 # from typing import *
 import asyncio
+from asyncio.futures import TimeoutError
 from datetime import datetime
 
 from redis import StrictRedis
 from uuid import uuid4
+
+from recter.exceptions import WaitingTimeoutError, RunningTimeoutError
 
 
 class AsyncThrottle:
@@ -17,7 +20,7 @@ class AsyncThrottle:
     def __key(self):
         return 'recter:' + self.name
 
-    async def attend(self, timeout: float) -> bytes:
+    async def wait(self, timeout: float) -> bytes:
         token = str(uuid4()).encode('utf8')
         timestamp = datetime.now().timestamp()
         key = self.__key
@@ -28,13 +31,18 @@ class AsyncThrottle:
                 return token
             await asyncio.sleep(0.01)
             if datetime.now().timestamp() - timestamp > timeout:
-                raise Exception('timeout')
+                self.exit(token)
+                raise WaitingTimeoutError()
 
     def exit(self, token):
         self.redis.zrem(self.__key, token)
 
-    async def run_async(self, coroutine, attend_timeout=1.0):
-        token = await self.attend(attend_timeout)
-        result = await coroutine
-        self.exit(token)
-        return result
+    async def run(self, coroutine, waiting_timeout=10.0, running_timeout=10.0):
+        token = await self.wait(waiting_timeout)
+        try:
+            result = await asyncio.wait_for(coroutine, running_timeout)
+            return result
+        except TimeoutError as te:
+            raise RunningTimeoutError(te)
+        finally:
+            self.exit(token)

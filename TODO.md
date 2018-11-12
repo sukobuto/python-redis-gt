@@ -8,8 +8,9 @@
 - [x] throttle に並列上限を設定する
 - [x] 並列上限を超えた場合は待機する
 - [x] throttle に名前空間を与える
+- [x] 待機 timeout を設ける
+- [x] 処理 timeout を設ける
 - [ ] ゴミが残らないように TTL を設ける
-- [ ] timeout を設ける
 - [ ] asyncio を使わない Throttle を実装する
 
 throttle をテストするアイデア
