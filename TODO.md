@@ -10,6 +10,7 @@
 - [x] throttle に名前空間を与える
 - [ ] ゴミが残らないように TTL を設ける
 - [ ] timeout を設ける
+- [ ] asyncio を使わない Throttle を実装する
 
 throttle をテストするアイデア
 - 待たされた回数を記録する

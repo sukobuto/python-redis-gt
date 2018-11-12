@@ -6,7 +6,7 @@ from redis import StrictRedis
 from uuid import uuid4
 
 
-class Throttle:
+class AsyncThrottle:
 
     def __init__(self, redis: StrictRedis, name: str, max_parallels: int):
         self.redis = redis
@@ -17,21 +17,24 @@ class Throttle:
     def __key(self):
         return 'recter:' + self.name
 
-    async def run_async(self, coroutine):
-        # return await coroutine
-        key = self.__key
+    async def attend(self, timeout: float) -> bytes:
         token = str(uuid4()).encode('utf8')
         timestamp = datetime.now().timestamp()
+        key = self.__key
         self.redis.zadd(key, timestamp, token)
-        limit = 100
         while True:
             cleared = self.redis.zrange(key, 0, self.max_parallels - 1)
             if token in cleared:
-                break
-            limit -= 1
-            if limit <= 0:
-                raise Exception('retry limit over')
-            await asyncio.sleep(0.05)
+                return token
+            await asyncio.sleep(0.01)
+            if datetime.now().timestamp() - timestamp > timeout:
+                raise Exception('timeout')
+
+    def exit(self, token):
+        self.redis.zrem(self.__key, token)
+
+    async def run_async(self, coroutine, attend_timeout=1.0):
+        token = await self.attend(attend_timeout)
         result = await coroutine
-        self.redis.zrem(key, token)
+        self.exit(token)
         return result
