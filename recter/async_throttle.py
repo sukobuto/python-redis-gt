@@ -29,6 +29,7 @@ class AsyncThrottle:
         token = str(uuid4()).encode('utf8')
         timestamp = datetime.now().timestamp()
         key = self.__key
+        self.register_as_waiting(token, timeout)
         self.redis.zadd(key, timestamp, token)
         count = 0
         while True:
@@ -43,8 +44,11 @@ class AsyncThrottle:
                 self.exit(token)
                 raise WaitingTimeoutError()
 
+    def register_as_waiting(self, token: bytes, waiting_timeout):
+        self.redis.setex(self.__key + ':' + token.decode('utf8'), math.ceil(waiting_timeout), 'waiting')
+
     def register_as_running(self, token: bytes, running_timeout):
-        self.redis.setex(self.__key + ':' + token.decode('utf8'), math.ceil(running_timeout), token)
+        self.redis.setex(self.__key + ':' + token.decode('utf8'), math.ceil(running_timeout), 'running')
 
     def exit(self, token: bytes):
         self.redis.zrem(self.__key, token)
