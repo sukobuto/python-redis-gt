@@ -10,11 +10,13 @@
 - [x] throttle に名前空間を与える
 - [x] 待機 timeout を設ける
 - [x] 処理 timeout を設ける
-- [ ] ゴミが残らないように TTL を設ける
+- [x] ゴミが残らないように TTL を設ける
 - [ ] asyncio を使わない Throttle を実装する
+- [ ] Throttle と AsyncThrottle のデコレータを実装するo
 
 throttle をテストするアイデア
 - 待たされた回数を記録する
+- 待たされた時間を記録する ← これにした（他の方法がうまく実現できなかったため）
 - 擬似的に完了を再現する
     - Future を渡しておいて set_result する
 - 待機時間を設けてログを記録する
