@@ -8,15 +8,14 @@ from redis import StrictRedis
 from uuid import uuid4
 
 from redis_gt.exceptions import WaitingTimeoutError, RunningTimeoutError
+from .defaults import Defaults
 
 
 class Throttle:
 
-    default_redis = None
-
-    def __init__(self, redis: StrictRedis, name: str, max_parallels: int,
+    def __init__(self, name: str, max_parallels: int, redis: StrictRedis=None,
                  polling_interval=0.01, garbage_check_window=3, garbage_check_interval_count=10):
-        self.redis = redis if redis is not None else self.default_redis
+        self.redis = redis if redis is not None else Defaults.get_redis()
         if self.redis is None:
             raise ValueError("Redis instance required for redis_gt.Throttle.")
         self.name = name

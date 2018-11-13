@@ -1,19 +1,55 @@
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/redis-gt.svg)](https://pypi.python.org/pypi/redis-gt/)
 [![CircleCI](https://circleci.com/gh/sukobuto/python-redis-gt.svg?style=svg)](https://circleci.com/gh/sukobuto/python-redis-gt)
 
 # Redis GT
 Global throttling with Redis.
 
+## installation
+
+```
+pip install redis-gt
+```
+
 ## usage
+
+ex) request with throttle
+
+```python
+import redis_gt
+import requests
+
+redis_gt.Defaults.redis_url = 'redis://127.0.0.1:6379'
+
+def get_members(**kwargs):
+    throttle = redis_gt.Throttle('backend_api_call', 20)
+    return throttle.run(requests.get, '/api/members/', **kwargs)
+```
+
+ex) same with asyncio
+
+```python
+import asyncio
+import redis_gt
+import requests
+
+redis_gt.Defaults.redis_url = 'redis://127.0.0.1:6379'
+
+async def get_members(**kwargs):
+    def _get():
+        return requests.get('/api/members/', **kwargs)
+    loop = asyncio.get_event_loop()
+    throttle = redis_gt.AsyncThrottle('backend_api_call', 20)
+    return await throttle.run(loop.run_in_executer(_get))
+```
 
 ### throttling
 
 ```python
-from redis_gt import Throttle
+import redis_gt
 import time
 from threading import Thread
-import redis
 
-r = redis.from_url('redis://127.0.0.1:6379')
+redis_gt.Defaults.redis_url = 'redis://127.0.0.1:6379'
 
 def do_something():
     time.sleep(1.0)
@@ -43,7 +79,7 @@ import redis
 async def do_something():
      await asyncio.sleep(1.0)
 
-r = redis.from_url('redis://127.0.0.1:6379')
+r = redis.StrictRedis.from_url('redis://127.0.0.1:6379')
 
 # max 10 parallels
 throttle = AsyncThrottle(r, 'something', 10)
@@ -63,7 +99,7 @@ from redis_gt import Throttle
 from redis_gt.decorators import throttle
 import redis
 
-r = redis.from_url('redis://127.0.0.1:6379')
+r = redis.StrictRedis.from_url('redis://127.0.0.1:6379')
 
 # for sync function
 

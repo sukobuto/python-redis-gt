@@ -13,7 +13,7 @@ def throttle(name: str, parallels: int, waiting_timeout=10.0, running_timeout=10
         if asyncio.iscoroutinefunction(func):
             @wraps(func)
             async def async_inner(*args, **kwargs):
-                at = AsyncThrottle(redis, name, parallels,
+                at = AsyncThrottle(name, parallels, redis,
                                    polling_interval, garbage_check_window, garbage_check_interval_count)
                 return await at.run(func(*args, **kwargs),
                                     waiting_timeout=waiting_timeout, running_timeout=running_timeout)
@@ -21,7 +21,7 @@ def throttle(name: str, parallels: int, waiting_timeout=10.0, running_timeout=10
         else:
             @wraps(func)
             def inner(*args, **kwargs):
-                t = Throttle(redis, name, parallels,
+                t = Throttle(name, parallels, redis,
                              polling_interval, garbage_check_window, garbage_check_interval_count)
                 return t.run(func, *args, **kwargs,
                              waiting_timeout=waiting_timeout, running_timeout=running_timeout)

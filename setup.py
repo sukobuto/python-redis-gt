@@ -9,7 +9,7 @@ with open('README.md') as f:
 
 setup(
     name='redis_gt',
-    version='1.0.0',
+    version='1.1.0',
     description='Global throttling with Redis.',
     long_description=long_description,
     long_description_content_type='text/markdown',

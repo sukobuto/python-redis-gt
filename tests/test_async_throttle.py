@@ -14,7 +14,7 @@ def redis():
 
 
 def test_throttle_runs_coroutine(redis, event_loop: asyncio.AbstractEventLoop):
-    throttle = AsyncThrottle(redis, 'test', 1)
+    throttle = AsyncThrottle('test', 1, redis)
     done = False
 
     async def do_something(a, b):
@@ -31,7 +31,7 @@ def test_throttle_runs_coroutine(redis, event_loop: asyncio.AbstractEventLoop):
 
 
 def test_throttle_works_with_para1(redis, event_loop: asyncio.AbstractEventLoop):
-    throttle = AsyncThrottle(redis, 'test', 1)
+    throttle = AsyncThrottle('test', 1, redis)
     start_at = datetime.now().timestamp()
     start_logs = []
 
@@ -53,7 +53,7 @@ def test_throttle_works_with_para1(redis, event_loop: asyncio.AbstractEventLoop)
 
 
 def test_throttle_works_with_para2(redis, event_loop: asyncio.AbstractEventLoop):
-    throttle = AsyncThrottle(redis, 'test', 2)
+    throttle = AsyncThrottle('test', 2, redis)
     start_at = datetime.now().timestamp()
     event_loop.run_until_complete(asyncio.wait([throttle.run(asyncio.sleep(0.1)) for _ in range(5)]))
     assert 0.3 <= datetime.now().timestamp() - start_at < 0.35
@@ -61,7 +61,7 @@ def test_throttle_works_with_para2(redis, event_loop: asyncio.AbstractEventLoop)
 
 
 def test_throttle_works_with_para5(redis, event_loop: asyncio.AbstractEventLoop):
-    throttle = AsyncThrottle(redis, 'test', 5)
+    throttle = AsyncThrottle('test', 5, redis)
     start_at = datetime.now().timestamp()
     event_loop.run_until_complete(asyncio.wait([throttle.run(asyncio.sleep(0.1)) for _ in range(5)]))
     assert 0.1 <= datetime.now().timestamp() - start_at < 0.13
@@ -69,8 +69,8 @@ def test_throttle_works_with_para5(redis, event_loop: asyncio.AbstractEventLoop)
 
 
 def test_another_throttles_do_not_conflict(redis, event_loop: asyncio.AbstractEventLoop):
-    t1 = AsyncThrottle(redis, 'test1', 1)
-    t2 = AsyncThrottle(redis, 'test2', 1)
+    t1 = AsyncThrottle('test1', 1, redis)
+    t2 = AsyncThrottle('test2', 1, redis)
     start_at = datetime.now().timestamp()
     event_loop.run_until_complete(asyncio.wait([
         t1.run(asyncio.sleep(0.1)),
@@ -83,7 +83,7 @@ def test_another_throttles_do_not_conflict(redis, event_loop: asyncio.AbstractEv
 
 @pytest.mark.asyncio
 async def test_throttle_raises_waiting_timeout_error_when_waiting_has_timeout(redis):
-    throttle = AsyncThrottle(redis, 'test', 1)
+    throttle = AsyncThrottle('test', 1, redis)
     done_tasks, _ = await asyncio.wait([
         throttle.run(asyncio.sleep(0.1), waiting_timeout=0.05),
         throttle.run(asyncio.sleep(0.1), waiting_timeout=0.05),
@@ -96,7 +96,7 @@ async def test_throttle_raises_waiting_timeout_error_when_waiting_has_timeout(re
 
 @pytest.mark.asyncio
 async def test_throttle_raises_running_timeout_error_when_running_has_timeout(redis: StrictRedis):
-    throttle = AsyncThrottle(redis, 'test', 1)
+    throttle = AsyncThrottle('test', 1, redis)
     with pytest.raises(RunningTimeoutError):
         await throttle.run(asyncio.sleep(0.1), running_timeout=0.05)
     assert not redis.exists('redis_gt:test')
@@ -104,7 +104,7 @@ async def test_throttle_raises_running_timeout_error_when_running_has_timeout(re
 
 @pytest.mark.asyncio
 async def test_throttle_removes_garbage_token(redis: StrictRedis):
-    throttle = AsyncThrottle(redis, 'test', 1)
+    throttle = AsyncThrottle('test', 1, redis)
     garbage_token = await throttle.wait(1.0)
     assert redis.zscore('redis_gt:test', garbage_token)
     await throttle.run(asyncio.sleep(0.01))

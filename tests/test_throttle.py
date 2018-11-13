@@ -24,7 +24,7 @@ def await_threads(threads: List[threading.Thread]) -> List[threading.Thread]:
 
 
 def test_throttle_runs_function(redis):
-    throttle = Throttle(redis, 'test', 1)
+    throttle = Throttle('test', 1, redis)
     done = False
 
     def do_something(a, b):
@@ -49,7 +49,7 @@ def test_throttle_works_with_para1(redis):
         time.sleep(0.1)
 
     def do_something_with_throttle():
-        throttle = Throttle(redis, 'test', 1)
+        throttle = Throttle('test', 1, redis)
         throttle.run(do_something)
 
     threads = [threading.Thread(target=do_something_with_throttle) for _ in range(5)]
@@ -70,7 +70,7 @@ def test_throttle_works_with_para2(redis):
         time.sleep(0.1)
 
     def do_nothing_with_throttle():
-        throttle = Throttle(redis, 'test', 2)
+        throttle = Throttle('test', 2, redis)
         throttle.run(do_nothing)
 
     threads = [threading.Thread(target=do_nothing_with_throttle) for _ in range(5)]
@@ -87,7 +87,7 @@ def test_throttle_works_with_para5(redis):
         time.sleep(0.1)
 
     def do_nothing_with_throttle():
-        throttle = Throttle(redis, 'test', 5)
+        throttle = Throttle('test', 5, redis)
         throttle.run(do_nothing)
 
     threads = [threading.Thread(target=do_nothing_with_throttle) for _ in range(5)]
@@ -103,11 +103,11 @@ def test_another_throttles_do_not_conflict(redis):
         time.sleep(0.1)
 
     def do_nothing_with_throttle1():
-        throttle = Throttle(redis, 'test1', 2)
+        throttle = Throttle('test1', 2, redis)
         throttle.run(do_nothing)
 
     def do_nothing_with_throttle2():
-        throttle = Throttle(redis, 'test2', 2)
+        throttle = Throttle('test2', 2, redis)
         throttle.run(do_nothing)
 
     start_at = datetime.now().timestamp()
@@ -128,7 +128,7 @@ def test_throttle_raises_waiting_timeout_error_when_waiting_has_timeout(redis):
 
     def do_nothing_with_throttle():
         nonlocal errors
-        throttle = Throttle(redis, 'test', 1)
+        throttle = Throttle('test', 1, redis)
         try:
             throttle.run(do_nothing, waiting_timeout=0.05)
         except WaitingTimeoutError as wte:
@@ -142,7 +142,7 @@ def test_throttle_raises_waiting_timeout_error_when_waiting_has_timeout(redis):
 
 
 def test_throttle_removes_garbage_token(redis: StrictRedis):
-    throttle = Throttle(redis, 'test', 1)
+    throttle = Throttle('test', 1, redis)
 
     def do_nothing():
         time.sleep(0.1)

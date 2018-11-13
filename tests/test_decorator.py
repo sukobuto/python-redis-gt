@@ -7,9 +7,8 @@ from typing import List
 
 import pytest
 from fakeredis import FakeStrictRedis
-from redis import StrictRedis
 
-from redis_gt import Throttle, WaitingTimeoutError
+import redis_gt
 from redis_gt.decorators import throttle as throttle_decorator
 
 
@@ -62,10 +61,11 @@ def test_throttle_works_with_para5(redis):
 
 
 def test_default_redis(redis):
-    Throttle.default_redis = redis
+    redis_gt.Defaults.redis = redis
 
     @throttle_decorator('test', 2)
     def do_something():
         return 'hello'
 
     assert do_something() == 'hello'
+    redis_gt.Defaults.redis = None
