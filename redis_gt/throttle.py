@@ -18,7 +18,7 @@ class Throttle:
                  polling_interval=0.01, garbage_check_window=3, garbage_check_interval_count=10):
         self.redis = redis if redis is not None else self.default_redis
         if self.redis is None:
-            raise ValueError("Redis instance required for recter.Throttle.")
+            raise ValueError("Redis instance required for redis_gt.Throttle.")
         self.name = name
         self.max_parallels = max_parallels
         self.polling_interval = polling_interval
@@ -27,7 +27,7 @@ class Throttle:
 
     @property
     def _key(self):
-        return 'recter:' + self.name
+        return 'redis_gt:' + self.name
 
     def wait(self, timeout: float) -> bytes:
         token = str(uuid4()).encode('utf8')

@@ -36,7 +36,7 @@ def test_throttle_runs_function(redis):
     assert not done
     assert throttle.run(do_something, 3, 7) == 21
     assert done
-    assert not redis.exists('recter:test')
+    assert not redis.exists('redis_gt:test')
 
 
 def test_throttle_works_with_para1(redis):
@@ -61,7 +61,7 @@ def test_throttle_works_with_para1(redis):
     for elapsed in start_logs[1:]:
         assert elapsed - last_elapsed >= 0.1
         last_elapsed = elapsed
-    assert not redis.exists('recter:test')
+    assert not redis.exists('redis_gt:test')
 
 
 def test_throttle_works_with_para2(redis):
@@ -78,7 +78,7 @@ def test_throttle_works_with_para2(redis):
     await_threads(threads)
     elapsed = datetime.now().timestamp() - start_at
     assert 0.3 <= elapsed < 0.35
-    assert not redis.exists('recter:test')
+    assert not redis.exists('redis_gt:test')
 
 
 def test_throttle_works_with_para5(redis):
@@ -94,7 +94,7 @@ def test_throttle_works_with_para5(redis):
     start_at = datetime.now().timestamp()
     await_threads(threads)
     assert 0.1 <= datetime.now().timestamp() - start_at < 0.13
-    assert not redis.exists('recter:test')
+    assert not redis.exists('redis_gt:test')
 
 
 def test_another_throttles_do_not_conflict(redis):
@@ -117,7 +117,7 @@ def test_another_throttles_do_not_conflict(redis):
     ])
     elapsed = datetime.now().timestamp() - start_at
     assert 0.1 <= elapsed < 0.13
-    assert not redis.exists('recter:test')
+    assert not redis.exists('redis_gt:test')
 
 
 def test_throttle_raises_waiting_timeout_error_when_waiting_has_timeout(redis):
@@ -138,7 +138,7 @@ def test_throttle_raises_waiting_timeout_error_when_waiting_has_timeout(redis):
     start_at = datetime.now().timestamp()
     await_threads(threads)
     assert 0.1 <= datetime.now().timestamp() - start_at < 0.13
-    assert not redis.exists('recter:test')
+    assert not redis.exists('redis_gt:test')
 
 
 def test_throttle_removes_garbage_token(redis: StrictRedis):
@@ -148,6 +148,6 @@ def test_throttle_removes_garbage_token(redis: StrictRedis):
         time.sleep(0.1)
 
     garbage_token = throttle.wait(1.0)
-    assert redis.zscore('recter:test', garbage_token)
+    assert redis.zscore('redis_gt:test', garbage_token)
     throttle.run(do_nothing)
-    assert not redis.exists('recter:test')
+    assert not redis.exists('redis_gt:test')

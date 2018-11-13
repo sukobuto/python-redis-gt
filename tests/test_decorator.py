@@ -45,7 +45,7 @@ def test_async_throttle_works_with_para2(redis, event_loop: asyncio.AbstractEven
     start_at = datetime.now().timestamp()
     event_loop.run_until_complete(asyncio.wait([do_something() for _ in range(5)]))
     assert 0.3 <= datetime.now().timestamp() - start_at < 0.35
-    assert not redis.exists('recter:test')
+    assert not redis.exists('redis_gt:test')
 
 
 def test_throttle_works_with_para5(redis):
@@ -58,7 +58,7 @@ def test_throttle_works_with_para5(redis):
     start_at = datetime.now().timestamp()
     await_threads(threads)
     assert 0.2 <= datetime.now().timestamp() - start_at < 0.25
-    assert not redis.exists('recter:test')
+    assert not redis.exists('redis_gt:test')
 
 
 def test_default_redis(redis):
