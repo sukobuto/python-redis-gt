@@ -10,6 +10,8 @@ redis = "*"
 pytest = "*"
 fakeredis = "*"
 pytest-asyncio = "*"
+"pytest-pep8" = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.7"

@@ -16,7 +16,7 @@ def throttle(name: str, parallels: int, waiting_timeout=10.0, running_timeout=10
                 at = AsyncThrottle(redis, name, parallels,
                                    polling_interval, garbage_check_window, garbage_check_interval_count)
                 return await at.run(func(*args, **kwargs),
-                                         waiting_timeout=waiting_timeout, running_timeout=running_timeout)
+                                    waiting_timeout=waiting_timeout, running_timeout=running_timeout)
             return async_inner
         else:
             @wraps(func)

@@ -20,3 +20,11 @@ throttle をテストするアイデア
 - 擬似的に完了を再現する
     - Future を渡しておいて set_result する
 - 待機時間を設けてログを記録する
+
+### pip install できるようにする
+
+- [ ] CircleCI を導入する
+- [ ] setup.py を記述する
+- [ ] PyPI に登録する
+
+参考: https://qiita.com/icoxfog417/items/edba14600323df6bf5e0

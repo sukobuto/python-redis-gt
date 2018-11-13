@@ -12,7 +12,7 @@ from recter.exceptions import WaitingTimeoutError, RunningTimeoutError
 
 class Throttle:
 
-    default_redis: StrictRedis = None
+    default_redis = None
 
     def __init__(self, redis: StrictRedis, name: str, max_parallels: int,
                  polling_interval=0.01, garbage_check_window=3, garbage_check_interval_count=10):
