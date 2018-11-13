@@ -12,6 +12,8 @@ fakeredis = "*"
 pytest-asyncio = "*"
 "pytest-pep8" = "*"
 pytest-cov = "*"
+wheel = "*"
+twine = "*"
 
 [requires]
 python_version = "3.6.4"
