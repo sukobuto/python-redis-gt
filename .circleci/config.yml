@@ -44,7 +44,7 @@ jobs:
       - run:
           name: run tests
           command: |
-            pipenv run pyenv --cov . --cov-report=html --pep8
+            pipenv run pytest --cov . --cov-report=html --pep8
 
       - store_artifacts:
           path: htmlcov
