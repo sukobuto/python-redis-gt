@@ -7,7 +7,7 @@ from datetime import datetime
 from redis import StrictRedis
 from uuid import uuid4
 
-from recter.exceptions import WaitingTimeoutError, RunningTimeoutError
+from redis_gt.exceptions import WaitingTimeoutError, RunningTimeoutError
 
 
 class Throttle:

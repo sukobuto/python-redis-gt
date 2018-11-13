@@ -9,8 +9,8 @@ import pytest
 from fakeredis import FakeStrictRedis
 from redis import StrictRedis
 
-from recter import Throttle, WaitingTimeoutError
-from recter.decorators import throttle as throttle_decorator
+from redis_gt import Throttle, WaitingTimeoutError
+from redis_gt.decorators import throttle as throttle_decorator
 
 
 @pytest.fixture(scope="module", autouse=True)

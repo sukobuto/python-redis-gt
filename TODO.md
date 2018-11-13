@@ -23,7 +23,7 @@ throttle をテストするアイデア
 
 ### pip install できるようにする
 
-- [ ] CircleCI を導入する
+- [x] CircleCI を導入する
 - [ ] setup.py を記述する
 - [ ] PyPI に登録する
 

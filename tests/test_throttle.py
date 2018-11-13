@@ -7,7 +7,7 @@ import pytest
 from fakeredis import FakeStrictRedis
 from redis import StrictRedis
 
-from recter import Throttle, WaitingTimeoutError
+from redis_gt import Throttle, WaitingTimeoutError
 
 
 @pytest.fixture(scope="module", autouse=True)
