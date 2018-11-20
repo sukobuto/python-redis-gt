@@ -1,3 +1,4 @@
+[![PyPI version](https://badge.fury.io/py/redis-gt.svg)](https://badge.fury.io/py/redis-gt)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/redis-gt.svg)](https://pypi.python.org/pypi/redis-gt/)
 [![CircleCI](https://circleci.com/gh/sukobuto/python-redis-gt.svg?style=svg)](https://circleci.com/gh/sukobuto/python-redis-gt)
 
