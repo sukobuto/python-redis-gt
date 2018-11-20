@@ -1,7 +1,7 @@
 from setuptools import setup
 
 requires = [
-    'redis>=2.10.6',
+    'redis==2.10.6',
 ]
 
 with open('README.md') as f:
@@ -9,7 +9,7 @@ with open('README.md') as f:
 
 setup(
     name='redis_gt',
-    version='1.1.0',
+    version='1.2.0',
     description='Global throttling with Redis.',
     long_description=long_description,
     long_description_content_type='text/markdown',
